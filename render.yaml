@@ -3,7 +3,7 @@ services:
     name: kindred-api
     runtime: node
     rootDir: .
-    buildCommand: pnpm install --prod=false && pnpm --filter api build && pnpm --filter api exec prisma migrate deploy
+    buildCommand: pnpm install --prod=false && pnpm --filter @kindred/shared build && pnpm --filter api build
     startCommand: pnpm --filter api start
     healthCheckPath: /health
     envVars:
