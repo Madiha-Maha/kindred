@@ -5,3 +5,6 @@ dist
 .env.local
 *.log
 coverage
+.vercel
+.env*
+*.tsbuildinfo
