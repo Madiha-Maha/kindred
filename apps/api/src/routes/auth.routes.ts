@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
+import { loginSchema, registerSchema } from '@kindred/shared';
+import { AuthRequest, requireAuth } from '../middleware/auth.middleware';
+const prisma = new PrismaClient();
+const router = Router();
+const tokenFor = (userId: string) => jwt.sign({ userId }, process.env.JWT_SECRET ?? 'development-secret', { expiresIn: '7d' });
+router.post('/register', async (request, response, next) => { try { const input = registerSchema.parse(request.body); const passwordHash = await bcrypt.hash(input.password, 12); const user = await prisma.user.create({ data: { ...input, passwordHash }, select: { id: true, email: true, name: true, role: true } }); response.status(201).json({ token: tokenFor(user.id), user }); } catch (error) { next(error); } });
+router.post('/login', async (request, response, next) => { try { const input = loginSchema.parse(request.body); const user = await prisma.user.findUnique({ where: { email: input.email } }); if (!user || !(await bcrypt.compare(input.password, user.passwordHash))) return response.status(401).json({ error: 'Invalid email or password' }); response.json({ token: tokenFor(user.id), user: { id: user.id, email: user.email, name: user.name, role: user.role } }); } catch (error) { next(error); } });
+router.get('/me', requireAuth, async (request: AuthRequest, response, next) => { try { const user = await prisma.user.findUnique({ where: { id: request.userId }, select: { id: true, email: true, name: true, role: true, bio: true, avatarUrl: true } }); response.json(user); } catch (error) { next(error); } });
+export default router;

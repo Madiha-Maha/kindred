@@ -1,0 +1,3 @@
+import { Fraunces, Inter } from 'next/font/google'; import { Nav } from '../components/Nav'; import '../styles/globals.css';
+const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' }); const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en" className={`${fraunces.variable} ${inter.variable}`}><body><Nav />{children}</body></html>; }

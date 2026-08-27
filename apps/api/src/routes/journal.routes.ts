@@ -1,0 +1,2 @@
+import { Router } from 'express'; import { PrismaClient } from '@prisma/client'; const prisma = new PrismaClient(); const router = Router();
+router.get('/:mentorId', async (request, response, next) => { try { response.json(await prisma.legacyJournalEntry.findMany({ where: { mentorId: request.params.mentorId }, orderBy: { id: 'desc' } })); } catch (error) { next(error); } }); export default router;

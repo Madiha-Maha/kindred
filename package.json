@@ -1,0 +1,10 @@
+{
+  "name": "kindred",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel --filter web --filter api dev",
+    "build": "pnpm --recursive build",
+    "typecheck": "pnpm --recursive typecheck"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

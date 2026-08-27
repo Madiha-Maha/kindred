@@ -1,0 +1,79 @@
+generator client {
+	provider = "prisma-client-js"
+}
+datasource db {
+	provider = "postgresql"
+	url = env("DATABASE_URL")
+}
+enum Role {
+	MENTOR
+	LEARNER
+}
+enum SessionMode {
+	VIDEO
+	IN_PERSON
+}
+enum SessionStatus {
+	PENDING
+	CONFIRMED
+	COMPLETED
+	CANCELLED
+}
+model User {
+	id String @id @default(cuid())
+	email String @unique
+	passwordHash String
+	role Role
+	name String
+	avatarUrl String?
+	bio String?
+	createdAt DateTime @default(now())
+	mentorProfile MentorProfile? @relation("UserMentorProfile")
+	learnerSessions Session[] @relation("LearnerSessions")
+	mentorSessions Session[] @relation("MentorSessions")
+	journalEntries LegacyJournalEntry[]
+}
+model MentorProfile {
+	userId String @id
+	availability Json
+	ratePerSession Int
+	user User @relation("UserMentorProfile", fields: [userId], references: [id], onDelete: Cascade)
+	skills Skill[]
+}
+model Skill {
+	id String @id @default(cuid())
+	name String
+	category String
+	mentors MentorProfile[]
+	sessions Session[]
+}
+model Session {
+	id String @id @default(cuid())
+	mentorId String
+	learnerId String
+	skillId String
+	scheduledAt DateTime
+	mode SessionMode
+	status SessionStatus @default(PENDING)
+	mentor User @relation("MentorSessions", fields: [mentorId], references: [id])
+	learner User @relation("LearnerSessions", fields: [learnerId], references: [id])
+	skill Skill @relation(fields: [skillId], references: [id])
+	review Review?
+	journalEntry LegacyJournalEntry?
+}
+model Review {
+	id String @id @default(cuid())
+	sessionId String @unique
+	rating Int
+	comment String?
+	session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+model LegacyJournalEntry {
+	id String @id @default(cuid())
+	mentorId String
+	sessionId String @unique
+	summaryText String
+	mediaUrl String?
+	mentor User @relation(fields: [mentorId], references: [id])
+	session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}

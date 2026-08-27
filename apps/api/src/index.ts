@@ -1,0 +1,30 @@
+import 'dotenv/config';
+import { createServer } from 'node:http';
+import express from 'express';
+import cors from 'cors';
+import { Server } from 'socket.io';
+import authRoutes from './routes/auth.routes';
+import mentorRoutes from './routes/mentors.routes';
+import sessionRoutes from './routes/sessions.routes';
+import matchingRoutes from './routes/matching.routes';
+import journalRoutes from './routes/journal.routes';
+import { errorHandler } from './middleware/error.middleware';
+import { registerSessionSocket } from './sockets/session.socket';
+
+const app = express();
+const allowedOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:3000').split(',').map((origin) => origin.trim());
+app.use(cors({ origin: allowedOrigins }));
+app.use(express.json());
+app.get('/health', (_request, response) => response.json({ status: 'ok' }));
+app.use('/auth', authRoutes);
+app.use('/mentors', mentorRoutes);
+app.use('/sessions', sessionRoutes);
+app.use('/matching', matchingRoutes);
+app.use('/journal', journalRoutes);
+app.use(errorHandler);
+
+const port = Number(process.env.PORT ?? 4000);
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: { origin: allowedOrigins } });
+registerSessionSocket(io);
+httpServer.listen(port, () => console.log(`Kindred API listening on ${port}`));

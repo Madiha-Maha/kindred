@@ -1,0 +1,2 @@
+import Link from 'next/link'; import type { MentorSummary } from '@kindred/shared';
+export function MentorCard({ mentor }: { mentor: MentorSummary }) { return <Link href={`/mentors/${mentor.id}`} className="postcard"><div className="avatar">{mentor.name.charAt(0)}</div><div><p className="eyebrow">MENTOR / {mentor.skills[0] ?? 'WISDOM'}</p><h3>{mentor.name}</h3><p className="muted">{mentor.bio ?? 'A generous person with stories to share.'}</p><div className="tags">{mentor.skills.map((skill) => <span key={skill}>{skill}</span>)}</div></div></Link>; }

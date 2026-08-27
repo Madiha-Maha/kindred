@@ -1,0 +1,1 @@
+export default function Journal() { return <main className="page"><p className="eyebrow">LEGACY JOURNAL</p><h1>Notes from<br/><em>a life well lived.</em></h1><article className="journal-entry"><p className="eyebrow">MAYA CHEN / 01</p><h2>Start with the soil</h2><p>Every garden teaches you to pay attention before it teaches you anything else.</p></article></main>; }

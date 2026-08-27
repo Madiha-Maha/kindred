@@ -1,0 +1,1 @@
+export default function Session() { return <main className="room"><p className="eyebrow">KINDRED ROOM</p><h1>Your conversation<br/><em>starts here.</em></h1><div className="video-placeholder"><span>Video room ready</span><button className="button primary">Join session</button></div></main>; }

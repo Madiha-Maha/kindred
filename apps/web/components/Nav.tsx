@@ -1,0 +1,3 @@
+'use client';
+import Link from 'next/link'; import { useState } from 'react'; import { Minus, Plus } from 'lucide-react';
+export function Nav() { const [large, setLarge] = useState(false); return <nav className="nav"><Link href="/" className="brand">kindred<span>.</span></Link><div className="navlinks"><Link href="/discover">Discover</Link><Link href="/dashboard">My space</Link><button aria-label="Toggle larger text" onClick={() => setLarge(!large)} className="access">{large ? <Minus size={16}/> : <Plus size={16}/>} Text</button></div></nav>; }

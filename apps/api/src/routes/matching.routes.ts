@@ -1,0 +1,2 @@
+import { Router } from 'express'; import { requireAuth } from '../middleware/auth.middleware'; import { compatibilityScore } from '../services/matching.service'; const router = Router();
+router.post('/score', requireAuth, (request, response) => response.json({ score: compatibilityScore(request.body.learnerId, request.body.skillId), explanation: 'A promising match based on shared interests.' })); export default router;
